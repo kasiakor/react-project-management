@@ -6,6 +6,7 @@ const {
   GraphQLID,
   GraphQLSchema,
   GraphQLList,
+  GraphQLNonNull,
 } = require("graphql");
 
 // Project Type
@@ -73,21 +74,34 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-module.exports = new GraphQLSchema({
-  query: RootQuery,
+// Mutations
+// id is not unique
+
+const mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addClient: {
+      type: ClientType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        phone: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, args) {
+        const client = new Object({
+          id: args.id,
+          name: args.name,
+          email: args.email,
+          phone: args.phone,
+        });
+        return client;
+      },
+    },
+  },
 });
 
-// const RocketType = new GraphQLObjectType({
-//   name: "Rocket",
-//   fields: () => ({
-//     rocket_id: {
-//       type: GraphQLString,
-//     },
-//     rocket_name: {
-//       type: GraphQLString,
-//     },
-//     rocket_type: {
-//       type: GraphQLString,
-//     },
-//   }),
-// });
+module.exports = new GraphQLSchema({
+  query: RootQuery,
+  mutation,
+});
