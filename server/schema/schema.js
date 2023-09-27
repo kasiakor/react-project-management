@@ -7,6 +7,7 @@ const {
   GraphQLSchema,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLEnumType,
 } = require("graphql");
 
 // Project Type
@@ -104,7 +105,37 @@ const mutation = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args) {
-        return clients.filter((client) => client.id !== args.id);
+        return clients.filter((client) => client.id === args.id);
+      },
+    },
+    addProject: {
+      type: ProjectType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        descritpion: { type: new GraphQLNonNull(GraphQLString) },
+        status: {
+          type: new GraphQLEnumType({
+            name: "ProjectStatus",
+            values: {
+              new: { value: "New projects" },
+              progress: { value: "In progress" },
+              completed: { value: "Completed" },
+            },
+          }),
+          defaultValue: "New project",
+        },
+        clientId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        const project = new Object({
+          id: args.id,
+          name: args.name,
+          description: args.descritpion,
+          status: args.status,
+          clientId: args.clientId,
+        });
+        return project;
       },
     },
   },
