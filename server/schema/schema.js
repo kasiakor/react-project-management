@@ -144,7 +144,7 @@ const mutation = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args) {
-        return projects.filter((project) => project.id !== arguments.id);
+        return projects.filter((project) => project.id !== args.id);
       },
     },
   },
