@@ -1,4 +1,4 @@
-import { FaEnvelope, FaPhone, FaIdBadge } from "react-cons/fa";
+import { FaEnvelope, FaPhone, FaIdBadge } from "react-icons/fa";
 
 export default function ClientInfo({ client }) {
   return (
